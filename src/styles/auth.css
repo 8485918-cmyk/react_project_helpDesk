@@ -1,0 +1,210 @@
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    min-height: 100vh;
+}
+
+.container {
+    width: 360px;
+    margin: 60px auto;
+    font-family: "Arial", sans-serif;
+    text-align: center;
+    animation: slideInUp 0.6s ease-out;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    padding: 2.5rem 1.5rem;
+}
+
+.container h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #8b5cf6 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fadeInDown 0.6s ease-out 0.1s both;
+}
+
+.container h2 {
+    margin: 0 0 2rem 0;
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 500;
+    animation: fadeInDown 0.6s ease-out 0.2s both;
+}
+
+.switchContainer {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    background: rgba(148, 163, 184, 0.1);
+    padding: 0.25rem;
+}
+
+.switchButton {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: transparent;
+    color: #64748b;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+}
+
+.switchButton:hover {
+    background: rgba(30, 58, 138, 0.1);
+}
+
+.activeButton {
+    background: linear-gradient(135deg, #1e3a8a 0%, #8b5cf6 100%);
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.formContainer {
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: slideInUp 0.6s ease-out 0.3s both;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1.5px solid rgba(148, 163, 184, 0.2);
+    font-size: 0.95rem;
+    box-sizing: border-box;
+    height: auto;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+}
+
+.input:focus {
+    border-color: #1e3a8a;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.inputError {
+    border-color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.02);
+}
+
+.passwordGroup {
+    position: relative;
+    width: 100%;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eyeButton:hover {
+    opacity: 0.7;
+}
+
+.error {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+.submitButton {
+    padding: 0.875rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #8b5cf6 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 0.5rem;
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+}
+
+.submitButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(30, 58, 138, 0.3);
+}
+
+.submitButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .container {
+        width: 100%;
+        max-width: 360px;
+        margin: 40px auto;
+        padding: 2rem 1.5rem;
+    }
+
+    .container h1 {
+        font-size: 1.5rem;
+    }
+}
