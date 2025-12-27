@@ -1,4 +1,4 @@
-import { useEffect, useState, type FunctionComponent } from "react";
+import { useState, type FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import AddStatusDialog from "./addStatusDialog";
 import AddPriorityDialog from "./addPriorityDialog";
-import { api } from "../api/api";
+import { useMeta } from "../context/metaContext";
 
 
 
@@ -25,35 +25,10 @@ const Header: FunctionComponent<HeaderProps> = ({ role, name }) => {
     const [openStatus, setOpenStatus] = useState(false);
     const [openPriority, setOpenPriority] = useState(false);
 
-    const [priorities, setPriorities] = useState<string[]>([]);
-    const [statuses, setStatuses] = useState<string[]>([]);
+    const { refreshPriorities, refreshStatuses } = useMeta();
 
-
-    const fetchPriorities = async () => {
-        try {
-            const res = await api("/priorities");
-            const data = await res.json();
-            setPriorities(data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const fetchStatuses = async () => {
-        try {
-            const res = await api("/statuses");
-            const data = await res.json();
-            setStatuses(data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    useEffect(() => {
-        fetchPriorities();
-        fetchStatuses();
-    }, []);
     const buttons: { label: string, path: string }[] = [];
+
 
     if (role == "customer") {
         buttons.push(
@@ -98,7 +73,7 @@ const Header: FunctionComponent<HeaderProps> = ({ role, name }) => {
                     </Typography>
 
                     <Box sx={{ display: "flex", gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                        {role === "admin" && (
+                        {role == "admin" && (
                             <>
                                 <Button
                                     variant="contained"
@@ -145,16 +120,18 @@ const Header: FunctionComponent<HeaderProps> = ({ role, name }) => {
                     </Box>
                 </Box>
             </Toolbar>
+
+
             <AddPriorityDialog
                 open={openPriority}
                 onClose={() => setOpenPriority(false)}
-                onCreated={fetchPriorities}
+                onCreated={refreshPriorities}
             />
 
             <AddStatusDialog
                 open={openStatus}
                 onClose={() => setOpenStatus(false)}
-                onCreated={fetchStatuses}
+                onCreated={refreshStatuses}
             />
 
         </AppBar>

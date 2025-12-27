@@ -15,6 +15,7 @@ import NewUser from './components/user/newUser'
 import Guard from './components/guard/guard'
 import theme from './theme/theme'
 
+
 function App() {
 
   return (
@@ -22,51 +23,51 @@ function App() {
       <CssBaseline />
       <AuthProvider>
         <BrowserRouter>
-        <Routes>
+          <Routes>
 
-          <Route path="/" element={<Auth />} />
-          <Route path="/login" element={<Auth />} />
+            <Route path="/" element={<Auth />} />
+            <Route path="/login" element={<Auth />} />
 
-          <Route path="/dashboard"
-            element={
-              <Guard>
-                <PrivateRoute>
-                  <Dashboard />
-                </PrivateRoute>
-              </Guard>
-            } >
-
-            <Route index element={<TicketsList />} />
-
-            <Route path='tickets' element={<TicketsList />} />
-
-            <Route path='tickets/new'
+            <Route path="/dashboard"
               element={
-                <PrivateRoute roles={["customer"]}>
-                  <NewTicket />
+                <Guard>
+                  <PrivateRoute>
+                    <Dashboard />
+                  </PrivateRoute>
+                </Guard>
+              } >
+
+              <Route index element={<TicketsList />} />
+
+              <Route path='tickets' element={<TicketsList />} />
+
+              <Route path='tickets/new'
+                element={
+                  <PrivateRoute roles={["customer"]}>
+                    <NewTicket />
+                  </PrivateRoute>
+                } />
+
+              <Route path='users' element={
+                <PrivateRoute roles={["admin"]}>
+                  <Users />
                 </PrivateRoute>
               } />
 
-            <Route path='users' element={
-              <PrivateRoute roles={["admin"]}>
-                <Users />
-              </PrivateRoute>
-            } />
+              <Route path='users/new' element={
+                <PrivateRoute roles={["admin"]}>
+                  <NewUser />
+                </PrivateRoute>
+              } />
 
-            <Route path='users/new' element={
-              <PrivateRoute roles={["admin"]}>
-                <NewUser />
-              </PrivateRoute>
-            } />
-
-          </Route>
+            </Route>
 
 
-          <Route path="/notAuthorized" element={<NotAuthorized />} />
-          <Route path="*" element={<NotFound />} />
+            <Route path="/notAuthorized" element={<NotAuthorized />} />
+            <Route path="*" element={<NotFound />} />
 
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+        </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
   )

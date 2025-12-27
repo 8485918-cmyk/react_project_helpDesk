@@ -5,6 +5,7 @@ import { Box, Card, CardContent, Typography, Button, MenuItem, TextField, Contai
 import { useTheme } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import '../../styles/tickets.css';
+import { useMeta } from "../../context/metaContext";
 
 interface NewTicketProps { }
 
@@ -18,6 +19,8 @@ const NewTicket: FunctionComponent<NewTicketProps> = () => {
 
     const navigate = useNavigate();
     const theme = useTheme();
+
+    const { priorities } = useMeta();
 
     const { register,
         handleSubmit,
@@ -125,9 +128,12 @@ const NewTicket: FunctionComponent<NewTicketProps> = () => {
                                 }
                             }}
                         >
-                            <MenuItem value={1}>⬇️ Low</MenuItem>
-                            <MenuItem value={2}>➡️ Medium</MenuItem>
-                            <MenuItem value={3}>⬆️ High</MenuItem>
+                            <MenuItem value="">All Priorities</MenuItem>
+                            {priorities.map(priority => (
+                                <MenuItem key={priority.id} value={priority.id}>
+                                    {priority.name}
+                                </MenuItem>
+                            ))}
                         </TextField>
 
                         <Button

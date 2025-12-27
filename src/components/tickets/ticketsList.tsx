@@ -11,6 +11,7 @@ import type { Ticket } from "../../types/Ticket";
 import type { Comment } from "../../types/Comment";
 import Comments from "./comments";
 import '../../styles/tickets.css';
+import { useMeta } from "../../context/metaContext";
 
 
 interface TicketsListProps { }
@@ -38,23 +39,7 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
     const [assignedToFilter, setAssignedToFilter] = useState<number | "">("");
     const [dateFilter, setDateFilter] = useState<string>("");
 
-    const getStatusName = (statusId: number): string => {
-        switch (statusId) {
-            case 1: return "Open";
-            case 2: return "In Progress";
-            case 3: return "Closed";
-            default: return "Unknown";
-        }
-    };
-
-    const getPriorityName = (priorityId: number): string => {
-        switch (priorityId) {
-            case 1: return "Low";
-            case 2: return "Medium";
-            case 3: return "High";
-            default: return "Unknown";
-        }
-    };
+    const { statuses, priorities } = useMeta();
 
 
     useEffect(() => {
@@ -84,6 +69,7 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
         };
         fetchAgents();
     }, []);
+
 
 
     const loadComments = async (ticketId: number) => {
@@ -118,6 +104,14 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
             console.error(err);
         }
     };
+
+
+    const getStatusName = (id: number) =>
+        statuses.find(s => s.id == id)?.name || "Unknown";
+
+    const getPriorityName = (id: number) =>
+        priorities.find(p => p.id == id)?.name || "Unknown";
+
 
 
     const handleDeleteTicket = async (ticketId: number) => {
@@ -267,9 +261,11 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
                         displayEmpty
                         sx={{ minWidth: 150 }}>
                         <MenuItem value="">All Status</MenuItem>
-                        <MenuItem value={1}>🟢 Open</MenuItem>
-                        <MenuItem value={2}>🟡 In Progress</MenuItem>
-                        <MenuItem value={3}>🔴 Closed</MenuItem>
+                        {statuses.map(status => (
+                            <MenuItem key={status.id} value={status.id}>
+                                {status.name}
+                            </MenuItem>
+                        ))}
                     </Select>
 
                     <Select size="small" value={priorityFilter}
@@ -277,9 +273,11 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
                         displayEmpty
                         sx={{ minWidth: 150 }}>
                         <MenuItem value="">All Priorities</MenuItem>
-                        <MenuItem value={1}>⬇️ Low</MenuItem>
-                        <MenuItem value={2}>➡️ Medium</MenuItem>
-                        <MenuItem value={3}>⬆️ High</MenuItem>
+                        {priorities.map(priority => (
+                            <MenuItem key={priority.id} value={priority.id}>
+                                {priority.name}
+                            </MenuItem>
+                        ))}
                     </Select>
 
                     {currentUser?.role === "admin" && (
@@ -398,23 +396,22 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
 
                                                 <Box className="ticket-detail-item">
                                                     <Typography className="ticket-detail-label">Status:</Typography>
-                                                    {(currentUser?.role == "agent" || currentUser?.role === "admin") ? (
+                                                    {(currentUser?.role == "agent" || currentUser?.role == "admin") ? (
                                                         <Select
                                                             size="small"
                                                             value={ticket.status_id}
                                                             onChange={async (e) => {
                                                                 const newStatusId = e.target.value as number;
-                                                                try {
-                                                                    await updateTicketStatus(ticket.id, newStatusId);
-                                                                    const refreshedTickets = await getTickets();
-                                                                    if (Array.isArray(refreshedTickets)) setTickets(refreshedTickets);
-                                                                } catch (err) { console.error(err); }
+                                                                await updateTicketStatus(ticket.id, newStatusId);
+                                                                setTickets(await getTickets());
                                                             }}
                                                             sx={{ flex: 1 }}
                                                         >
-                                                            <MenuItem value={1}>🟢 Open</MenuItem>
-                                                            <MenuItem value={2}>🟡 In Progress</MenuItem>
-                                                            <MenuItem value={3}>🔴 Closed</MenuItem>
+                                                            {statuses.map(status => (
+                                                                <MenuItem key={status.id} value={status.id}>
+                                                                    {status.name}
+                                                                </MenuItem>
+                                                            ))}
                                                         </Select>
                                                     ) : (
                                                         <Typography variant="body2">{getStatusName(ticket.status_id)}</Typography>
@@ -429,17 +426,19 @@ const TicketsList: FunctionComponent<TicketsListProps> = () => {
                                                             value={ticket.priority_id}
                                                             onChange={async (e) => {
                                                                 const newPriorityId = e.target.value as number;
-                                                                try {
-                                                                    await api(`/tickets/${ticket.id}`, { method: "PATCH", body: JSON.stringify({ priority_id: newPriorityId }) });
-                                                                    const refreshedTickets = await getTickets();
-                                                                    if (Array.isArray(refreshedTickets)) setTickets(refreshedTickets);
-                                                                } catch (err) { console.error(err); }
+                                                                await api(`/tickets/${ticket.id}`, {
+                                                                    method: "PATCH",
+                                                                    body: JSON.stringify({ priority_id: newPriorityId }),
+                                                                });
+                                                                setTickets(await getTickets());
                                                             }}
                                                             sx={{ flex: 1 }}
                                                         >
-                                                            <MenuItem value={1}>⬇️ Low</MenuItem>
-                                                            <MenuItem value={2}>➡️ Medium</MenuItem>
-                                                            <MenuItem value={3}>⬆️ High</MenuItem>
+                                                            {priorities.map(priority => (
+                                                                <MenuItem key={priority.id} value={priority.id}>
+                                                                    {priority.name}
+                                                                </MenuItem>
+                                                            ))}
                                                         </Select>
                                                     ) : (
                                                         <Typography variant="body2">{getPriorityName(ticket.priority_id)}</Typography>
