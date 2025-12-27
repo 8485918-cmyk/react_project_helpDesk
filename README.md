@@ -1,73 +1,105 @@
-# React + TypeScript + Vite
+## 🛠️ Helpdesk Ticket Management System (React)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+מערכת Helpdesk לניהול טיקטים (פניות) מבוססת React + TypeScript, העובדת מול שרת קיים (API) ללא כל שינוי בצד השרת.  
+האפליקציה מאפשרת עבודה לפי תפקידי משתמש והרשאות, תוך שימוש ב־JWT לצורך אימות.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📌 מה המערכת עושה
 
-## React Compiler
+האפליקציה מדמה מערכת Helpdesk ארגונית ומאפשרת:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- התחברות והרשמה למערכת
+- פתיחת טיקטים
+- צפייה בטיקטים בהתאם להרשאות המשתמש
+- הקצאת טיקטים
+- עדכון סטטוסים ורמות דחיפות
+- הוספת תגובות לטיקטים
+- ניהול משתמשים, ניהול סטטוסים ורמות דחיפות (Admin)
 
-## Expanding the ESLint configuration
+המערכת בנויה כך שכל משתמש רואה ופועל רק לפי ההרשאות שהוגדרו לו.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 👥 תפקידי משתמשים והרשאות
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### 👤 Customer
+- רואה רק טיקטים שהוא יצר
+- יכול לפתוח טיקט חדש
+- יכול להוסיף תגובות לטיקטים שלו
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 🧑‍💼 Agent
+- רואה רק טיקטים שהוקצו אליו
+- יכול לעדכן סטטוס טיקט
+- יכול להוסיף תגובות לטיקטים שהוקצו אליו
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 👑 Admin
+- רואה את כל המשתמשים במערכת
+- יכול להוסיף משתמשים חדשים
+- רואה את כל הטיקטים במערכת
+- יכול להקצות טיקטים ל־Agent
+- יכול להוסיף ולנהל סטטוסים חדשים
+- יכול להוסיף ולנהל רמות דחיפות
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🔐 ניהול State (כפי שמומש בפרויקט)
+
+- Authentication (login / logout)
+- שמירת token (JWT)
+- פרטי משתמש מחובר
+- טעינת טיקטים מהשרת וניהולם בצד לקוח
+
+---
+
+## 🎨 עיצוב וחוויית משתמש
+
+- עיצוב נקי ומקצועי (Material UI)
+- מבנה של מערכת Helpdesk אמיתית
+- טיפול במצבי UI:
+  - טעינה (Loading)
+  - שגיאות
+  - מצב “אין נתונים”
+  - הרשאות (Not Authorized)
+
+---
+
+## 🧱 טכנולוגיות עיקריות
+
+- React + TypeScript
+- React Router
+- Material UI (MUI)
+- עבודה מול REST API
+- JWT Authentication
+- חלוקה לקומפוננטות ושירותי API
+
+---
+
+## 📁 מבנה כללי של הפרויקט (src)
+
+- `api/` – קריאות לשרת (auth, tickets, comments, meta, users)
+- `components/`
+  - `dashboard` – מסך ראשי
+  - `tickets` – רשימת טיקטים, טיקט חדש
+  - `guard / privateRoute` – הגנת נתיבים לפי הרשאות
+  - `dialogs` – הוספת סטטוסים / דחיפויות
+- `App.tsx` – ניתוב ראשי
+- `main.tsx` – אתחול האפליקציה
+
+---
+
+## ▶️ הנחיות הרצה
+
+- יש לוודא ש־Node.js מותקן
+
+- התקנת תלויות:
+```bash
+npm install
+
+
+הרצת הפרויקט:
+
+npm run dev
+
+
+יש לוודא שהשרת (API) רץ ומוגדר לפי כתובת ה־Base URL בקבצי ה־API
